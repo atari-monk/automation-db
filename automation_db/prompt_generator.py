@@ -1,10 +1,11 @@
 from typing import List
-from automation_db.project.model import Project
-from automation_db.agent.model import Agent
-from automation_db.code_style.model import CodeStyle
-from automation_db.feature.model import Feature
-from automation_db.file.model import File
-from automation_db.task.model import Task
+from automation_db.models.project import Project
+from automation_db.models.agent import Agent
+from automation_db.models.code_style import CodeStyle
+from automation_db.models.feature import Feature
+from automation_db.models.file import File
+from automation_db.models.task import Task
+
 
 class PromptGenerator:    
     @staticmethod
@@ -66,7 +67,7 @@ class PromptGenerator:
     @staticmethod
     def get_file_context_prompt(project: Project, files: List[File]) -> str:
         if not files:
-            return ""  # Return empty string if no files provided
+            return ""
         
         file_sections: list[str] = []
         
@@ -85,5 +86,4 @@ class PromptGenerator:
             except Exception as e:
                 file_sections.append(f"{file_header} - ERROR READING FILE: {str(e)}")
         
-        # Add the header and join all sections
         return "Code Context:\n\n" + "\n\n".join(file_sections) + "\n"

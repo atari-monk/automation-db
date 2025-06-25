@@ -1,18 +1,19 @@
 from pathlib import Path
 from typing import List
-from automation_db.project.model import Project
-from automation_db.code_style.model import CodeStyle
-from automation_db.feature.model import Feature
-from automation_db.agent.model import Agent
-from automation_db.file.model import File
-from automation_db.task.model import Task
-from automation_db.project.crud import ProjectCRUD
-from automation_db.code_style.crud import CodeStyleCRUD
-from automation_db.feature.crud import FeatureCRUD
-from automation_db.agent.crud import AgentCRUD
-from automation_db.file.crud import FileCRUD
-from automation_db.task.crud import TaskCRUD
-from automation_db.automation.prompt_generator import PromptGenerator
+from automation_db.models.project import Project
+from automation_db.models.code_style import CodeStyle
+from automation_db.models.feature import Feature
+from automation_db.models.agent import Agent
+from automation_db.models.file import File
+from automation_db.models.task import Task
+from automation_db.crud.project_crud import ProjectCRUD
+from automation_db.crud.code_style_crud import CodeStyleCRUD
+from automation_db.crud.feature_crud import FeatureCRUD
+from automation_db.crud.agent_crud import AgentCRUD
+from automation_db.crud.file_crud import FileCRUD
+from automation_db.crud.task_crud import TaskCRUD
+from automation_db.prompt_generator import PromptGenerator
+
 
 class AutomationContext:
     project: Project

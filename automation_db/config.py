@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, ClassVar
+from automation_db.models.model_type import ModelType
 
-from automation_db.cli.model_type import ModelType
 
 @dataclass(frozen=True)
 class DbConfig:
@@ -34,16 +34,11 @@ class DbConfig:
         attr_name = model_type.value
         return getattr(self, attr_name)
 
-db_config = DbConfig()
 
-if __name__ == '__main__':
-    print(f'db_folder: {db_config.db_folder}')
-    
-    print(f'project: {db_config.project}')
-    print(f'code_style: {db_config.code_style}')
-    print(f'agent: {db_config.agent}')
-    print(f'feature: {db_config.feature}')
-    print(f'file: {db_config.file}')
-    print(f'task: {db_config.task}')
+_config_instance: DbConfig | None = None
 
-    print(f'db_config[ModelType.AGENT]: {db_config[ModelType.AGENT]}')
+def get_config() -> DbConfig:
+    global _config_instance
+    if _config_instance is None:
+        _config_instance = DbConfig()
+    return _config_instance

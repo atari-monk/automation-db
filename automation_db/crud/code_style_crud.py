@@ -1,45 +1,44 @@
 from typing import Any
+from pathlib import Path
 import toml
-from automation_db.config import db_config
-from automation_db.models import CodeStyle
+from automation_db.models.code_style import CodeStyle
+
 
 class CodeStyleCRUD:
-    @staticmethod
-    def create(codestyle: CodeStyle) -> None:
+    def __init__(self, path: Path):
+        self.path = path
+
+    def create(self, codestyle: CodeStyle) -> None:
         new_data: dict[str, dict[str, Any]] = {
             'codestyle': {
                 'requirements': codestyle.requirements
             }}
-        with db_config.code_style.open('w') as f:
+        with self.path.open('w') as f:
             toml.dump(new_data, f)
 
-    @staticmethod
-    def read() -> CodeStyle:
-        data = toml.load(db_config.code_style.open())
+    def read(self) -> CodeStyle:
+        data = toml.load(self.path.open())
         return CodeStyle(
             requirements=data['codestyle']['requirements']
         )
 
-    @staticmethod
-    def add_requirement(requirement: str) -> CodeStyle:
-        current = CodeStyleCRUD.read()
+    def add_requirement(self, requirement: str) -> CodeStyle:
+        current = self.read()
         current.requirements.append(requirement)
-        CodeStyleCRUD.create(current)
+        self.create(current)
         return current
 
-    @staticmethod
-    def update_requirement(old: str, new: str) -> CodeStyle:
-        current = CodeStyleCRUD.read()
+    def update_requirement(self, old: str, new: str) -> CodeStyle:
+        current = self.read()
         if old in current.requirements:
             index = current.requirements.index(old)
             current.requirements[index] = new
-        CodeStyleCRUD.create(current)
+        self.create(current)
         return current
 
-    @staticmethod
-    def remove_requirement(requirement: str) -> CodeStyle:
-        current = CodeStyleCRUD.read()
+    def remove_requirement(self, requirement: str) -> CodeStyle:
+        current = self.read()
         if requirement in current.requirements:
             current.requirements.remove(requirement)
-        CodeStyleCRUD.create(current)
+        self.create(current)
         return current
