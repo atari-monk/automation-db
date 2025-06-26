@@ -27,60 +27,65 @@ class AutomationContext:
     path: Path = Path()
     is_load = False
 
-    @classmethod
-    def _load_task(cls) -> bool:
-        task = TaskCRUD.read_by_status()
+    def __init__(self):
+        from automation_db.config import get_config
+        self.config = get_config()
+        self.taskCRUD = TaskCRUD(self.config.task)
+        self.projectCRUD = ProjectCRUD(self.config.project)
+        self.code_styleCRUD = CodeStyleCRUD(self.config.code_style)
+        self.agentCRUD = AgentCRUD(self.config.agent)
+        self.featureCRUD = FeatureCRUD(self.config.feature) 
+        self.fileCRUD = FileCRUD(self.config.file)    
+
+    def _load_task(self) -> bool:
+        task = self.taskCRUD.read_by_status()
         if not task:
             return False
         else:
-            cls.task = task
+            self.task = task
             return True
 
-    @classmethod
-    def load(cls) -> bool:
-        cls.project = ProjectCRUD.read()
-        cls.code_style = CodeStyleCRUD.read()
-        if not cls._load_task(): return False
-        cls.agent = AgentCRUD.read_by_role(cls.task.assigned_to)
-        cls.feature = FeatureCRUD.read_by_name(cls.task.feature)
-        cls.file = FileCRUD.read_by_id(cls.task.save_file)
-        cls.files = FileCRUD.read_many_by_ids(cls.task.context_files)
-        cls.path = cls.project.path / cls.file.path / cls.file.file_name
-        cls.is_load = True
+    def load(self) -> bool:
+        self.project = self.projectCRUD.read()
+        self.code_style = self.code_styleCRUD.read()
+        if not self._load_task(): return False
+        self.agent = self.agentCRUD.read_by_role(self.task.assigned_to)
+        self.feature = self.featureCRUD.read_by_name(self.task.feature)
+        self.file = self.fileCRUD.read_by_id(self.task.save_file)
+        self.files = self.fileCRUD.read_many_by_ids(self.task.context_files)
+        self.path = self.project.path / self.file.path / self.file.file_name
+        self.is_load = True
         return True
 
-    @classmethod
-    def generate_prompt(cls):
-        if not cls.is_load:
+    def generate_prompt(self):
+        if not self.is_load:
             print('First load model')
             return
         prompt: List[str] = []
-        prompt.append(PromptGenerator.get_project_prompt(cls.project))
-        prompt.append(PromptGenerator.get_code_style_prompt(cls.code_style))
-        prompt.append(PromptGenerator.get_feature_prompt(cls.feature))
-        prompt.append(PromptGenerator.get_agent_prompt(cls.agent))
-        prompt.append(PromptGenerator.get_file_prompt(cls.file))
-        prompt.append(PromptGenerator.get_task_prompt(cls.task))
-        prompt.append(PromptGenerator.get_file_context_prompt(cls.project, cls.files))
-        cls.prompt = '\n' + "\n\n".join(prompt)
+        prompt.append(PromptGenerator.get_project_prompt(self.project))
+        prompt.append(PromptGenerator.get_code_style_prompt(self.code_style))
+        prompt.append(PromptGenerator.get_feature_prompt(self.feature))
+        prompt.append(PromptGenerator.get_agent_prompt(self.agent))
+        prompt.append(PromptGenerator.get_file_prompt(self.file))
+        prompt.append(PromptGenerator.get_task_prompt(self.task))
+        prompt.append(PromptGenerator.get_file_context_prompt(self.project, self.files))
+        self.prompt = '\n' + "\n\n".join(prompt)
 
-    @classmethod
-    def update_task(cls, status: str = 'implementing'):
-        TaskCRUD.update(cls.task.feature, cls.task.name, {"status": status})
+    def update_task(self, status: str = 'implementing'):
+        self.taskCRUD.update(self.task.feature, self.task.name, {"status": status})
 
-    @classmethod
-    def test(cls):
-        is_pending = cls.load()
+    def test(self):
+        is_pending = self.load()
         if not is_pending:
             print('\nNo pending task\n')
             return
         
         while is_pending:
-            cls.generate_prompt()
-            print(cls.prompt)
-            cls.update_task()
+            self.generate_prompt()
+            print(self.prompt)
+            self.update_task()
 
-            is_pending = cls.load()
+            is_pending = self.load()
             if not is_pending:
                 print('\nNo pending task\n')
                 return

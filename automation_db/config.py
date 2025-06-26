@@ -6,9 +6,9 @@ from automation_db.models.model_type import ModelType
 
 @dataclass(frozen=True)
 class DbConfig:
-    race_game = r"C:\atari-monk\code\race-track-game\automation_db"
-    arcade = r"C:\atari-monk\code\explore-arcade\automation_db"
-    db_folder: Path = Path(arcade)
+    race_game = r"C:\atari-monk\code\arcade\race-track-game\automation_db"
+    arcade = r"C:\atari-monk\code\arcade\explore-arcade\automation_db"
+    db_folder: Path = Path(race_game)
 
     project: Path = field(init=False)
     code_style: Path = field(init=False)
