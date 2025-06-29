@@ -1,9 +1,7 @@
-from typing import List
 from automation_db.models.project import Project
 from automation_db.models.agent import Agent
 from automation_db.models.code_style import CodeStyle
 from automation_db.models.feature import Feature
-from automation_db.models.file import File
 from automation_db.models.task import Task
 
 
@@ -45,17 +43,6 @@ class PromptGenerator:
         return "\n".join(prompt)
 
     @staticmethod
-    def get_file_prompt(file: File) -> str:
-        file_prompt = [
-             "File:",
-            f"- file name: {file.file_name}",
-            f"- path: {file.path}",
-        ]
-        if file.class_name:
-            file_prompt.append(f"- class name: {file.class_name}")
-        return "\n".join(file_prompt)
-
-    @staticmethod
     def get_task_prompt(task: Task) -> str:
         prompt = [
             f"Task: {task.name}",
@@ -64,26 +51,3 @@ class PromptGenerator:
         ]
         return "\n".join(prompt)
     
-    @staticmethod
-    def get_file_context_prompt(project: Project, files: List[File]) -> str:
-        if not files:
-            return ""
-        
-        file_sections: list[str] = []
-        
-        for file in files:
-            full_path = project.path / file.path / file.file_name
-            file_header = f"File: {full_path}"
-            
-            if not full_path.exists():
-                file_sections.append(f"{file_header} - NOT FOUND")
-                continue
-                
-            try:
-                with open(full_path, 'r') as f:
-                    content = f.read().strip()
-                    file_sections.append(f"{file_header}\n{content}")
-            except Exception as e:
-                file_sections.append(f"{file_header} - ERROR READING FILE: {str(e)}")
-        
-        return "Code Context:\n\n" + "\n\n".join(file_sections) + "\n"
