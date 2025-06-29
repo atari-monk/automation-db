@@ -99,8 +99,17 @@ class AgentCRUD:
                 )
         raise ValueError(f"Agent with role '{role}' not found")
 
-    def remove(self, role: str) -> None:
+    def remove(self, role: str) -> bool:
         data = toml.load(self.path.open())
-        data['agent'] = [agent for agent in data.get('agent', []) if agent['role'] != role]
-        with self.path.open('w') as f:
-            toml.dump(data, f)
+        agents = data.get('agent', [])
+        original_length = len(agents)
+        
+        data['agent'] = [agent for agent in agents if agent['role'] != role]
+        
+        removed = original_length != len(data['agent'])
+        
+        if removed:
+            with self.path.open('w') as f:
+                toml.dump(data, f)
+        
+        return removed
