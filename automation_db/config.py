@@ -6,9 +6,7 @@ from automation_db.models.model_type import ModelType
 
 @dataclass(frozen=True)
 class DbConfig:
-    race_game = r"C:\atari-monk\code\arcade\race-track-game\automation_db"
-    arcade = r"C:\atari-monk\code\arcade\explore-arcade\automation_db"
-    db_folder: Path = Path(race_game)
+    db_folder: Path
 
     project: Path = field(init=False)
     code_style: Path = field(init=False)
@@ -37,8 +35,8 @@ class DbConfig:
 
 _config_instance: DbConfig | None = None
 
-def get_config() -> DbConfig:
+def get_config(db_folder: Path) -> DbConfig:
     global _config_instance
     if _config_instance is None:
-        _config_instance = DbConfig()
+        _config_instance = DbConfig(db_folder)
     return _config_instance
