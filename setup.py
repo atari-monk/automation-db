@@ -8,6 +8,7 @@ setup(
     install_requires=[],
     entry_points={
         "console_scripts": [
+            "automation_prompt=automation_db.main:main" 
         ],
     },
     python_requires=">=3.7",

@@ -1,18 +1,34 @@
 from pathlib import Path
-from automation_db.crud.project_crud import ProjectCRUD
-from automation_db.crud.code_style_crud import CodeStyleCRUD
-from automation_db.crud.agent_crud import AgentCRUD
-from automation_db.crud.feature_crud import FeatureCRUD
-from automation_db.crud.task_crud import TaskCRUD
-from automation_db.crud.db_services import DBServices
-from automation_db.prompt_service import PromptService
+import argparse
+from automation_db.automation_service import run_automation
 
+
+def get_path_interactively():
+    while True:
+        path_input = input("Enter path (or 'q' to quit): ").strip()
+        if path_input.lower() == 'q':
+            exit(0)
+        path = Path(path_input)
+        if path.exists():
+            return path
+        print(f"Path '{path}' doesn't exist")
 
 def main():
-    path = Path('test')
-    db = DBServices(ProjectCRUD(path), CodeStyleCRUD(path),  AgentCRUD(path), FeatureCRUD(path), TaskCRUD(path))
-    prompt_service = PromptService(db)
-    prompt_service.run()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--path', type=str, help='Path for automation service')
+    args = parser.parse_args()
+
+    if args.path:
+        path = Path(args.path)
+        if not path.exists():
+            print(f"Path '{path}' not found")
+            path = get_path_interactively()
+    else:
+        path = get_path_interactively()
+
+    print(f"Using path: {path}")
+    run_automation(path)
+
 
 if __name__ == '__main__':
     main()

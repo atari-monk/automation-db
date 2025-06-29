@@ -24,10 +24,10 @@ class TaskCRUD:
             "name": task.name,
             "requirements": task.requirements,
             "files": task.files,
-            "status": task.status
+            "status": task.status,
             "feature": task.feature,
-            "agent": task.agent,
-        })
+            "agent": task.agent
+            })
         self._save(data)
 
     def read_all(self) -> List[Task]:

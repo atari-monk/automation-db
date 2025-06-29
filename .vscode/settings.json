@@ -6,6 +6,5 @@
   "python.languageServer": "Pylance",
   "python.analysis.diagnosticSeverityOverrides": {
     "reportMissingTypeStubs": "none"
-  },
-  "python.analysis.extraPaths": ["./automation_db"]
+  }
 }
