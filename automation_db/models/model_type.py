@@ -6,5 +6,4 @@ class ModelType(Enum):
     CODE_STYLE = "code_style"
     AGENT = "agent"
     FEATURE = "feature"
-    FILE = "file"
     TASK = "task"

@@ -21,13 +21,12 @@ class TaskCRUD:
         data = self._load()
         data.setdefault("task", [])
         data["task"].append({
-            "feature": task.feature,
             "name": task.name,
             "requirements": task.requirements,
-            "context_files": task.context_files,
-            "save_file": task.save_file,
-            "assigned_to": task.assigned_to,
+            "files": task.files,
             "status": task.status
+            "feature": task.feature,
+            "agent": task.agent,
         })
         self._save(data)
 
@@ -35,13 +34,12 @@ class TaskCRUD:
         data = self._load()
         return [
             Task(
-                feature=item["feature"],
                 name=item["name"],
                 requirements=item["requirements"],
-                context_files=item["context_files"],
-                save_file=item["save_file"],
-                assigned_to=item["assigned_to"],
-                status=item["status"]
+                files=item["files"],
+                status=item["status"],
+                feature=item["feature"],
+                agent=item["agent"],
             )
             for item in data.get("task", [])
         ]
@@ -51,13 +49,12 @@ class TaskCRUD:
         for item in data["task"]:
             if item["feature"] == feature and item["name"] == name:
                 return Task(
-                    feature=item["feature"],
                     name=item["name"],
                     requirements=item["requirements"],
-                    context_files=item["context_files"],
-                    save_file=item["save_file"],
-                    assigned_to=item["assigned_to"],
-                    status=item["status"]
+                    files=item["files"],
+                    status=item["status"],
+                    feature=item["feature"],
+                    agent=item["agent"],
                 )
         raise ValueError(f"Task with feature '{feature}' and name '{name}' not found")
 
@@ -66,13 +63,12 @@ class TaskCRUD:
         for item in data["task"]:
             if item["status"] == status:
                 return Task(
-                    feature=item["feature"],
                     name=item["name"],
                     requirements=item["requirements"],
-                    context_files=item["context_files"],
-                    save_file=item["save_file"],
-                    assigned_to=item["assigned_to"],
-                    status=item["status"]
+                    files=item["files"],
+                    status=item["status"],
+                    feature=item["feature"],
+                    agent=item["agent"],
                 )
         return None
 
@@ -85,13 +81,12 @@ class TaskCRUD:
                         item[key] = value
                 self._save(data)
                 return Task(
-                    feature=item["feature"],
                     name=item["name"],
                     requirements=item["requirements"],
-                    context_files=item["context_files"],
-                    save_file=item["save_file"],
-                    assigned_to=item["assigned_to"],
-                    status=item["status"]
+                    files=item["files"],
+                    status=item["status"],
+                    feature=item["feature"],
+                    agent=item["agent"],
                 )
         raise ValueError(f"Task with feature '{feature}' and name '{name}' not found")
 

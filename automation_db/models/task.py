@@ -1,13 +1,14 @@
 from dataclasses import dataclass
+from pathlib import Path
 from typing import List
+
 
 @dataclass
 class Task:
-    feature: str
     name: str
     requirements: List[str]
-    context_files: List[int]
-    save_file: int
-    assigned_to: str
+    files: List[Path]
     status: str
 
+    feature: str
+    agent: str
