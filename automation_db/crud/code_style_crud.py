@@ -6,7 +6,7 @@ from automation_db.models.code_style import CodeStyle
 
 class CodeStyleCRUD:
     def __init__(self, path: Path):
-        self.path = path
+        self.path = path / 'codestyle.toml'
 
     def create(self, codestyle: CodeStyle) -> None:
         new_data: dict[str, dict[str, Any]] = {

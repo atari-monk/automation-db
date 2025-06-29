@@ -6,7 +6,7 @@ from automation_db.models.agent import Agent
 
 class AgentCRUD:
     def __init__(self, path: Path):
-        self.path = path
+        self.path = path / 'agent.toml'
 
     def create(self, agent: Agent) -> None:
         data: dict[str, list[dict[str, object]]] = {'agent': []}

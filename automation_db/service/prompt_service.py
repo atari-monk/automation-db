@@ -5,7 +5,7 @@ from automation_db.models.feature import Feature
 from automation_db.models.task import Task
 
 
-class PromptGenerator:    
+class PromptService:    
     @staticmethod
     def get_project_prompt(project: Project) -> str:
         prompt = [

@@ -6,7 +6,7 @@ from automation_db.models.project import Project
 
 class ProjectCRUD:
     def __init__(self, path: Path):
-        self.path = path
+        self.path = path / 'project.toml'
 
     def create(self, project: Project) -> None:
         new_data: dict[str, dict[str, Any]] = {

@@ -6,7 +6,7 @@ from automation_db.models.task import Task
 
 class TaskCRUD:
     def __init__(self, path: Path) -> None:
-        self.path: Path = path
+        self.path: Path = path / 'task.toml'
 
     def _load(self) -> Dict[str, List[Dict[str, Any]]]:
         if self.path.exists():

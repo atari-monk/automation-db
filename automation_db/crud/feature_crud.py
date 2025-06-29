@@ -6,7 +6,7 @@ from automation_db.models.feature import Feature
 
 class FeatureCRUD:
     def __init__(self, path: Path):
-        self.path = path
+        self.path = path / 'feature.toml'
 
     def create(self, feature: Feature) -> None:
         data: dict[str, list[dict[str, object]]] = {'feature': []}
